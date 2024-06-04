@@ -15,7 +15,7 @@ import Page from '../../../components/Page';
 import Iconify from '../../../components/Iconify';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
 // guards
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../../../guards/RoleBasedGuard';
 // sections
 import {
   AccountGeneral,
@@ -24,7 +24,6 @@ import {
   AccountNotifications,
   AccountChangePassword,
 } from '../../../sections/@dashboard/user/account';
-import RoleBasedGuard from '../../../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
