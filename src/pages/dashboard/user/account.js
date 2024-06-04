@@ -24,6 +24,7 @@ import {
   AccountNotifications,
   AccountChangePassword,
 } from '../../../sections/@dashboard/user/account';
+import RoleBasedGuard from '../../../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
