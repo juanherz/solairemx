@@ -11,6 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import useAuth from '../../../../hooks/useAuth';
 // utils
 import { fData } from '../../../../utils/formatNumber';
+import axios from '../../../../utils/axios';
 // _mock
 import { countries } from '../../../../_mock';
 // components
@@ -54,7 +55,8 @@ export default function AccountGeneral() {
 
   const onSubmit = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const formValues = methods.getValues();
+      await axios.put('/api/account/my-account', formValues);
       enqueueSnackbar('Update success!');
     } catch (error) {
       console.error(error);

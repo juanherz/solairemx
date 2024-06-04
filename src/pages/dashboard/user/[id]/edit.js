@@ -1,6 +1,7 @@
 import { paramCase, capitalCase } from 'change-case';
 // next
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 // @mui
 import { Container } from '@mui/material';
 // routes
@@ -16,6 +17,8 @@ import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 // sections
 import UserNewEditForm from '../../../../sections/@dashboard/user/UserNewEditForm';
+// utils
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +33,27 @@ export default function UserEdit() {
 
   const { query } = useRouter();
 
-  const { name } = query;
+  const { id } = query;
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`/api/account/user/${id}`);
+          setCurrentUser(response.data);
+        } catch (error) {
+          console.error('Failed to fetch user:', error);
+        }
+      };
+      fetchData();
+    }
+  }, [id]);
+
+  if (!currentUser) {
+    return null;
+  }
 
   return (
     <Page title="User: Edit user">
@@ -42,7 +63,7 @@ export default function UserEdit() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'User', href: PATH_DASHBOARD.user.list },
-            { name: capitalCase(name) },
+            { name: currentUser.displayName },
           ]}
         />
 

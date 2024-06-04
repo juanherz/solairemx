@@ -9,6 +9,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { PricingPlanCard } from '../sections/pricing';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,7 @@ Pricing.getLayout = function getLayout(page) {
 
 export default function Pricing() {
   return (
+    <RoleBasedGuard accessibleRoles={['admin']}>
     <Page title="Pricing">
       <RootStyle>
         <Container>
@@ -64,5 +66,6 @@ export default function Pricing() {
         </Container>
       </RootStyle>
     </Page>
+    </RoleBasedGuard>
   );
 }

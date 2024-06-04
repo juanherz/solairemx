@@ -7,6 +7,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { ContactHero, ContactForm, ContactMap } from '../sections/contact';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -27,21 +28,23 @@ Contact.getLayout = function getLayout(page) {
 
 export default function Contact() {
   return (
-    <Page title="Contact us">
-      <RootStyle>
-        <ContactHero />
+    <RoleBasedGuard accessibleRoles={['admin']}>
+      <Page title="Contact us">
+        <RootStyle>
+          <ContactHero />
 
-        <Container sx={{ my: 10 }}>
-          <Grid container spacing={10}>
-            <Grid item xs={12} md={6}>
-              <ContactForm />
+          <Container sx={{ my: 10 }}>
+            <Grid container spacing={10}>
+              <Grid item xs={12} md={6}>
+                <ContactForm />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <ContactMap />
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <ContactMap />
-            </Grid>
-          </Grid>
-        </Container>
-      </RootStyle>
-    </Page>
+          </Container>
+        </RootStyle>
+      </Page>
+    </RoleBasedGuard>
   );
 }

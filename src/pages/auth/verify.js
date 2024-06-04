@@ -59,7 +59,7 @@ export default function VerifyCode() {
             </Box>
 
             <Typography variant="body2" align="center">
-              Don’t have a code? &nbsp;
+              Don't have a code? &nbsp;
               <Link variant="subtitle2" underline="none" onClick={() => {}}>
                 Resend code
               </Link>

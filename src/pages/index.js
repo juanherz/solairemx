@@ -16,6 +16,7 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -32,34 +33,36 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 HomePage.getLayout = function getLayout(page) {
-  return <Layout variant="main">{page}</Layout>;
+  return <Layout variant="logoOnly">{page}</Layout>;
 };
 
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
   return (
-    <Page title="The starting point for your next project">
-      <RootStyle>
-        <HomeHero />
-        <ContentStyle>
-          <HomeMinimal />
+    <RoleBasedGuard accessibleRoles={['admin']}>
+      <Page title="The starting point for your next project">
+        <RootStyle>
+          <HomeHero />
+          <ContentStyle>
+            <HomeMinimal />
 
-          <HomeHugePackElements />
+            <HomeHugePackElements />
 
-          <HomeDarkMode />
+            <HomeDarkMode />
 
-          <HomeColorPresets />
+            <HomeColorPresets />
 
-          <HomeCleanInterfaces />
+            <HomeCleanInterfaces />
 
-          <HomePricingPlans />
+            <HomePricingPlans />
 
-          <HomeLookingFor />
+            <HomeLookingFor />
 
-          <HomeAdvertisement />
-        </ContentStyle>
-      </RootStyle>
-    </Page>
+            <HomeAdvertisement />
+          </ContentStyle>
+        </RootStyle>
+      </Page>
+    </RoleBasedGuard>
   );
 }

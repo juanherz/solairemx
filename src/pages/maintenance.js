@@ -9,6 +9,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 //
 import { MaintenanceIllustration } from '../assets';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -30,23 +31,25 @@ Maintenance.getLayout = function getLayout(page) {
 
 export default function Maintenance() {
   return (
-    <Page title="Maintenance" sx={{ height: 1 }}>
-      <RootStyle>
-        <Container sx={{ textAlign: 'center' }}>
-          <Typography variant="h3" paragraph>
-            Website currently under maintenance
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>We are currently working hard on this page!</Typography>
+    <RoleBasedGuard accessibleRoles={['admin']}>
+      <Page title="Maintenance" sx={{ height: 1 }}>
+        <RootStyle>
+          <Container sx={{ textAlign: 'center' }}>
+            <Typography variant="h3" paragraph>
+              Website currently under maintenance
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>We are currently working hard on this page!</Typography>
 
-          <MaintenanceIllustration sx={{ my: 10, height: 240 }} />
+            <MaintenanceIllustration sx={{ my: 10, height: 240 }} />
 
-          <NextLink href="/" passHref>
-            <Button size="large" variant="contained">
-              Go to Home
-            </Button>
-          </NextLink>
-        </Container>
-      </RootStyle>
-    </Page>
+            <NextLink href="/" passHref>
+              <Button size="large" variant="contained">
+                Go to Home
+              </Button>
+            </NextLink>
+          </Container>
+        </RootStyle>
+      </Page>
+    </RoleBasedGuard>
   );
 }

@@ -78,7 +78,7 @@ export default function Login() {
             <Logo />
             {smUp && (
               <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-                Don’t have an account? {''}
+                Don't have an account? {''}
                 <NextLink href={PATH_AUTH.register} passHref>
                   <Link variant="subtitle2">Get started</Link>
                 </NextLink>
@@ -94,8 +94,9 @@ export default function Login() {
               <Image
                 visibleByDefault
                 disabledEffect
-                src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_login.png"
+                src="https://images.unsplash.com/photo-1597848212624-a19eb35e2651?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="login"
+                ratio='4/3'
               />
             </SectionStyle>
           )}
@@ -105,7 +106,7 @@ export default function Login() {
               <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="h4" gutterBottom>
-                    Sign in to Minimal
+                    Sign in to Solaire MX
                   </Typography>
                   <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
                 </Box>
@@ -122,15 +123,15 @@ export default function Login() {
                 </Tooltip>
               </Stack>
 
-              <Alert severity="info" sx={{ mb: 3 }}>
+              {/* <Alert severity="info" sx={{ mb: 3 }}>
                 Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-              </Alert>
+              </Alert> */}
 
               <LoginForm />
 
               {!smUp && (
                 <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                  Don’t have an account?{' '}
+                  Don't have an account?{' '}
                   <NextLink href={PATH_AUTH.register} passHref>
                     <Link variant="subtitle2">Get started</Link>
                   </NextLink>

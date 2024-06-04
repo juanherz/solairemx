@@ -9,6 +9,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { PaymentSummary, PaymentMethods, PaymentBillingAddress } from '../sections/payment';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ export default function Payment() {
   const isDesktop = useResponsive('up', 'md');
 
   return (
+    <RoleBasedGuard accessibleRoles={['admin']}>
     <Page title="Payment">
       <RootStyle>
         <Container>
@@ -65,5 +67,6 @@ export default function Payment() {
         </Container>
       </RootStyle>
     </Page>
+    </RoleBasedGuard>
   );
 }

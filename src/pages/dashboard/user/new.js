@@ -11,6 +11,8 @@ import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
 // sections
 import UserNewEditForm from '../../../sections/@dashboard/user/UserNewEditForm';
+// guards
+import RoleBasedGuard from '../../../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -24,18 +26,20 @@ export default function UserCreate() {
   const { themeStretch } = useSettings();
 
   return (
-    <Page title="User: Create a new user">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Create a new user"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.list },
-            { name: 'New user' },
-          ]}
-        />
-        <UserNewEditForm />
-      </Container>
-    </Page>
+    <RoleBasedGuard accessibleRoles={['admin']}>
+      <Page title="User: Create a new user">
+        <Container maxWidth={themeStretch ? false : 'lg'}>
+          <HeaderBreadcrumbs
+            heading="Create a new user"
+            links={[
+              { name: 'Dashboard', href: PATH_DASHBOARD.root },
+              { name: 'User', href: PATH_DASHBOARD.user.list },
+              { name: 'New user' },
+            ]}
+          />
+          <UserNewEditForm />
+        </Container>
+      </Page>
+    </RoleBasedGuard>
   );
 }

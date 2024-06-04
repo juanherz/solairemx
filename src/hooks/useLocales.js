@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 // @mui
-import { enUS, deDE, frFR } from '@mui/material/locale';
+import { enUS, deDE, frFR, esES } from '@mui/material/locale';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +22,12 @@ const LANGS = [
     value: 'fr',
     systemValue: frFR,
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_fr.svg',
+  },
+  {
+    label: 'Spanish',
+    value: 'es',
+    systemValue: esES,
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg',
   },
 ];
 

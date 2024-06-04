@@ -12,6 +12,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
+import axios from '../../../utils/axios';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // _mock
@@ -33,7 +34,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    displayName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
@@ -42,12 +43,12 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
     role: Yup.string().required('Role Number is required'),
-    avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+    // photoURL: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
+      displayName: currentUser?.displayName || '',
       email: currentUser?.email || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
@@ -55,9 +56,9 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       state: currentUser?.state || '',
       city: currentUser?.city || '',
       zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.avatarUrl || '',
-      isVerified: currentUser?.isVerified || true,
-      status: currentUser?.status,
+      photoURL: currentUser?.photoURL || '',
+      isVerified: currentUser?.isVerified || false, // Default to false for new users
+      status: currentUser?.status || 'active', // Default to 'active'
       company: currentUser?.company || '',
       role: currentUser?.role || '',
     }),
@@ -89,16 +90,28 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [isEdit, currentUser, reset, defaultValues]);
 
   const onSubmit = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+      const formValues = methods.getValues();
+      let password;
+      if (isEdit) {
+        await axios.put(`/api/account/edit-user/${currentUser._id}`, formValues);
+      } else {
+        password = Math.random().toString(36).slice(-8);
+        formValues.password = password;
+        console.log(formValues)
+        await axios.post('/api/account/create-user', formValues);
+      }
+      enqueueSnackbar(!isEdit ? 'User created successfully!' : 'User updated successfully!');
+      if (!isEdit) {
+        alert(`User created successfully! Email: ${formValues.email}, Password: ${password}`);
+      }
       push(PATH_DASHBOARD.user.list);
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Failed to save user', { variant: 'error' });
     }
   };
 
@@ -108,7 +121,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
       if (file) {
         setValue(
-          'avatarUrl',
+          'photoURL',
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
@@ -134,7 +147,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
-                name="avatarUrl"
+                name="photoURL"
                 accept="image/*"
                 maxSize={3145728}
                 onDrop={handleDrop}
@@ -214,7 +227,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="name" label="Full Name" />
+              <RHFTextField name="displayName" label="Full Name" />
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
 
