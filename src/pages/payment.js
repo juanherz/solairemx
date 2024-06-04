@@ -9,7 +9,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { PaymentSummary, PaymentMethods, PaymentBillingAddress } from '../sections/payment';
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 

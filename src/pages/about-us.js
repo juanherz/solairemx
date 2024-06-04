@@ -7,7 +7,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { AboutHero, AboutWhat, AboutTeam, AboutVision, AboutTestimonials } from '../sections/about';
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 

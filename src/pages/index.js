@@ -16,7 +16,7 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 

@@ -7,7 +7,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { ContactHero, ContactForm, ContactMap } from '../sections/contact';
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 

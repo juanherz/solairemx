@@ -9,7 +9,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 //
 import { MaintenanceIllustration } from '../assets';
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 

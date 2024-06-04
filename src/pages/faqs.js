@@ -7,7 +7,7 @@ import Layout from '../layouts';
 import Page from '../components/Page';
 // sections
 import { FaqsHero, FaqsCategory, FaqsList, FaqsForm } from '../sections/faqs';
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 

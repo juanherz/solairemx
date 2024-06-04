@@ -20,7 +20,7 @@ import {
   EcommerceCurrentBalance,
 } from '../../sections/@dashboard/general/e-commerce';
 // guards
-import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import RoleBasedGuard from '../../guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ export default function GeneralEcommerce() {
   const { themeStretch } = useSettings();
 
   return (
-    <RoleBasedGuard accessibleRoles={['user']}>
+    <RoleBasedGuard accessibleRoles={['user','admin']}>
       <Page title="General: E-commerce">
         <Container maxWidth={themeStretch ? false : 'xl'}>
           <Grid container spacing={3}>
