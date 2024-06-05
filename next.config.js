@@ -13,7 +13,7 @@ module.exports = withTM({
   trailingSlash: true,
   env: {
     // HOST_API_KEY: 'https://minimal-assets-api.vercel.app',
-    HOST_API_KEY: process.env.HOST_API_KEY,
+    HOST_API_KEY: 'https://solairemdbsrv.onrender.com',
     // FIREBASE AUTH
     FIREBASE_API_KEY: '',
     FIREBASE_AUTH_DOMAIN: '',
