@@ -16,9 +16,10 @@ UserTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onChangePassword: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onChangePassword }) {
   const theme = useTheme();
 
   const { _id, displayName, photoURL, company, role, isVerified, status } = row;
@@ -99,6 +100,15 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
               >
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onChangePassword();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:key-fill'} />
+                Change Password
               </MenuItem>
             </>
           }
