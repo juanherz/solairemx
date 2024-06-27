@@ -80,7 +80,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <RoleBasedGuard roles={['admin']}>
+    <RoleBasedGuard accessibleRoles={['admin']}>
       <Page title="User: Change Password">
         <Container maxWidth="sm">
           <HeaderBreadcrumbs

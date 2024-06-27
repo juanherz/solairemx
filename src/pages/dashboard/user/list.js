@@ -190,7 +190,7 @@ export default function UserList() {
     (!dataFiltered.length && !!filterStatus);
 
   return (
-    <RoleBasedGuard roles={['admin']}>
+    <RoleBasedGuard accessibleRoles={['admin']}>
       <Page title="User: List">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <HeaderBreadcrumbs
