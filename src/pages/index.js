@@ -82,7 +82,7 @@ export default function HomePage() {
   useEffect(() => {
     if (isInitialized) {
       if (isAuthenticated) {
-        router.push('/dashboard/app');
+        router.push('/dashboard/user/list');
       } else {
         router.push('/auth/login');
       }

@@ -59,8 +59,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       photoURL: currentUser?.photoURL || '',
       isVerified: currentUser?.isVerified || false, // Default to false for new users
       status: currentUser?.status || 'active', // Default to 'active'
-      company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      company: currentUser?.company || 'SolaireMX',
+      role: currentUser?.role || 'user',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -145,7 +145,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               </Label>
             )}
 
-            <Box sx={{ mb: 5 }}>
+            {/* <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
                 name="photoURL"
                 accept="image/*"
@@ -167,7 +167,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                   </Typography>
                 }
               />
-            </Box>
+            </Box> */}
 
             {isEdit && (
               <FormControlLabel

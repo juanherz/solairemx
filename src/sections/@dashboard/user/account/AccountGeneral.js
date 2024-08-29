@@ -82,7 +82,7 @@ export default function AccountGeneral() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
               name="photoURL"
@@ -108,7 +108,7 @@ export default function AccountGeneral() {
 
             <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} />
           </Card>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
