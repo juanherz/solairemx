@@ -76,20 +76,20 @@ export default function Login() {
         <RootStyle>
           <HeaderStyle>
             <Logo />
-            {smUp && (
+            {/* {smUp && (
               <Typography variant="body2" sx={{ mt: { md: -2 } }}>
                 Don't have an account? {''}
                 <NextLink href={PATH_AUTH.register} passHref>
                   <Link variant="subtitle2">Get started</Link>
                 </NextLink>
               </Typography>
-            )}
+            )} */}
           </HeaderStyle>
 
           {mdUp && (
             <SectionStyle>
               <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-                Hi, Welcome Back
+                ¡Bienvenido de vuelta!
               </Typography>
               <Image
                 visibleByDefault
@@ -106,12 +106,12 @@ export default function Login() {
               <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="h4" gutterBottom>
-                    Sign in to Solaire MX
+                    Inicia sesión en SolaireMX
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>Ingresa tus credenciales abajo. Si olvidaste tu contraseña contacta al administrador.</Typography>
                 </Box>
 
-                <Tooltip title={capitalCase(method)} placement="right">
+                {/* <Tooltip title={capitalCase(method)} placement="right">
                   <>
                     <Image
                       disabledEffect
@@ -120,7 +120,7 @@ export default function Login() {
                       sx={{ width: 32, height: 32 }}
                     />
                   </>
-                </Tooltip>
+                </Tooltip> */}
               </Stack>
 
               {/* <Alert severity="info" sx={{ mb: 3 }}>
@@ -129,14 +129,14 @@ export default function Login() {
 
               <LoginForm />
 
-              {!smUp && (
+              {/* {!smUp && (
                 <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                   Don't have an account?{' '}
                   <NextLink href={PATH_AUTH.register} passHref>
                     <Link variant="subtitle2">Get started</Link>
                   </NextLink>
                 </Typography>
-              )}
+              )} */}
             </ContentStyle>
           </Container>
         </RootStyle>
