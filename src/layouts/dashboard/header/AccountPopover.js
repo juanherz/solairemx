@@ -20,7 +20,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'Inicio',
     linkTo: '/',
   },
   // {
@@ -28,7 +28,7 @@ const MENU_OPTIONS = [
   //   linkTo: PATH_DASHBOARD.user.profile,
   // },
   {
-    label: 'Settings',
+    label: 'Ajustes',
     linkTo: PATH_DASHBOARD.user.account,
   },
 ];
@@ -64,7 +64,7 @@ export default function AccountPopover() {
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+      enqueueSnackbar('¡Error al cerrar sesión!', { variant: 'error' });
     }
   };
 
@@ -128,7 +128,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          Cerrar sesión
         </MenuItem>
       </MenuPopover>
     </>
