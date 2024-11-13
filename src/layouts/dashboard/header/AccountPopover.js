@@ -28,7 +28,7 @@ const MENU_OPTIONS = [
   //   linkTo: PATH_DASHBOARD.user.profile,
   // },
   {
-    label: 'Ajustes',
+    label: 'Mi Cuenta',
     linkTo: PATH_DASHBOARD.user.account,
   },
 ];

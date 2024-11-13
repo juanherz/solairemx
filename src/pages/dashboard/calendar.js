@@ -159,11 +159,11 @@ export default function Calendar() {
   };
 
   return (
-    <Page title="Calendar">
+    <Page title="Calendario">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <HeaderBreadcrumbs
-          heading="Calendar"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}
+          heading="Calendario"
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendario' }]}
           moreLink="https://fullcalendar.io/docs/react"
           action={
             <Button
@@ -171,7 +171,7 @@ export default function Calendar() {
               startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
               onClick={handleAddEvent}
             >
-              New Event
+              Nuevo evento
             </Button>
           }
         />
@@ -212,7 +212,7 @@ export default function Calendar() {
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
+          <DialogTitle>{selectedEvent ? 'Editar Evento' : 'Agregar Evento'}</DialogTitle>
 
           <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
         </DialogAnimate>

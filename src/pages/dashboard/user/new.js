@@ -27,14 +27,14 @@ export default function UserCreate() {
 
   return (
     <RoleBasedGuard accessibleRoles={['admin']}>
-      <Page title="User: Create a new user">
+      <Page title="Usuarios: Crear nuevo usuario">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <HeaderBreadcrumbs
-            heading="Create a new user"
+            heading="Crear un nuevo usuario"
             links={[
               { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              { name: 'User', href: PATH_DASHBOARD.user.list },
-              { name: 'New user' },
+              { name: 'Usuarios', href: PATH_DASHBOARD.user.list },
+              { name: 'Nuevo Usuario' },
             ]}
           />
           <UserNewEditForm />

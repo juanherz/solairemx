@@ -25,7 +25,7 @@ export default function AccountGeneral() {
   const { user } = useAuth();
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required'),
+    displayName: Yup.string().required('Se requiere el nombre'),
   });
 
   const defaultValues = {
@@ -57,7 +57,7 @@ export default function AccountGeneral() {
     try {
       const formValues = methods.getValues();
       await axios.put('/api/account/my-account', formValues);
-      enqueueSnackbar('Update success!');
+      enqueueSnackbar('¡Actualización exitosa!');
     } catch (error) {
       console.error(error);
     }
@@ -120,11 +120,11 @@ export default function AccountGeneral() {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="displayName" label="Name" />
-              <RHFTextField name="email" label="Email Address" />
+              <RHFTextField name="displayName" label="Nombre" />
+              <RHFTextField name="email" label="Email" />
 
-              <RHFTextField name="phoneNumber" label="Phone Number" />
-              <RHFTextField name="address" label="Address" />
+              <RHFTextField name="phoneNumber" label="Número Teléfono" />
+              <RHFTextField name="address" label="Dirección" />
 
               <RHFSelect name="country" label="Country" placeholder="Country">
                 <option value="" />
@@ -135,17 +135,17 @@ export default function AccountGeneral() {
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="state" label="State/Region" />
+              <RHFTextField name="state" label="Estado/Región" />
 
-              <RHFTextField name="city" label="City" />
-              <RHFTextField name="zipCode" label="Zip/Code" />
+              <RHFTextField name="city" label="Ciudad" />
+              <RHFTextField name="zipCode" label="Código Postal" />
             </Box>
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-              <RHFTextField name="about" multiline rows={4} label="About" />
+              <RHFTextField name="about" multiline rows={4} label="Acerca de" />
 
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
+                Guardar Cambios
               </LoadingButton>
             </Stack>
           </Card>

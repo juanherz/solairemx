@@ -56,13 +56,13 @@ export default function UserEdit() {
   }
 
   return (
-    <Page title="User: Edit user">
+    <Page title="Userios: Editar usuario">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Edit user"
+          heading="Editar usuario"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.list },
+            { name: 'Usuario', href: PATH_DASHBOARD.user.list },
             { name: currentUser.displayName },
           ]}
         />

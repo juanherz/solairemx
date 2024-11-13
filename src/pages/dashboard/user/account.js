@@ -68,14 +68,14 @@ export default function UserAccount() {
 
   return (
     <RoleBasedGuard accessibleRoles={['admin']}>
-      <Page title="User: Account Settings">
+      <Page title="Usuarios: Mi Cuenta">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <HeaderBreadcrumbs
-            heading="Account"
+            heading="Mi Cuenta"
             links={[
               { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              { name: 'User', href: PATH_DASHBOARD.user.root },
-              { name: 'Account Settings' },
+              { name: 'Usuarios', href: PATH_DASHBOARD.user.root },
+              { name: 'Mi Cuenta' },
             ]}
           />
 

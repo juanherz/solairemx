@@ -58,12 +58,12 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'displayName', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
+  { id: 'displayName', label: 'Nombre', align: 'left' },
+  { id: 'company', label: 'Empresa', align: 'left' },
+  { id: 'role', label: 'Rol', align: 'left' },
+  { id: 'isVerified', label: 'Verificado', align: 'center' },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: '_id', label: 'Edit/Delete', align: 'left' },
+  { id: '_id', label: 'Editar/Borrar', align: 'left' },
   { id: '' },
 ];
 
@@ -146,7 +146,7 @@ export default function UserList() {
       setDeleteDialogOpen(false);
       setUserToDelete(null);
     } catch (error) {
-      console.error('Failed to delete the user:', error);
+      console.error('Error al eliminar usuario:', error);
     }
   };
 
@@ -162,7 +162,7 @@ export default function UserList() {
       setTableData(deleteRows);
       setDeleteMultipleDialogOpen(false);
     } catch (error) {
-      console.error('Failed to delete the users:', error);
+      console.error('Error al eliminar usuarios:', error);
     }
   };
 
@@ -191,19 +191,19 @@ export default function UserList() {
 
   return (
     <RoleBasedGuard accessibleRoles={['admin']}>
-      <Page title="User: List">
+      <Page title="Usuarios: Lista Usuarios">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <HeaderBreadcrumbs
-            heading="User List"
+            heading="Lista Usuarios"
             links={[
               { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              { name: 'User', href: PATH_DASHBOARD.user.root },
-              { name: 'List' },
+              { name: 'Usuarios', href: PATH_DASHBOARD.user.root },
+              { name: 'Lista Usuarios' },
             ]}
             action={
               <NextLink href={PATH_DASHBOARD.user.new} passHref>
                 <Button variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}>
-                  New User
+                  Nuevo Usuario
                 </Button>
               </NextLink>
             }
@@ -316,15 +316,15 @@ export default function UserList() {
             open={deleteDialogOpen}
             onClose={() => setDeleteDialogOpen(false)}
           >
-            <DialogTitle>Delete User</DialogTitle>
+            <DialogTitle>Eliminar usuario</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Are you sure you want to delete this user? This action cannot be undone.
+                ¿Estás seguro de eliminar a este usuario? Esta acción no se puede deshacer.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleConfirmDeleteRow} color="primary">Delete</Button>
+              <Button onClick={handleConfirmDeleteRow} color="primary">Eliminar</Button>
             </DialogActions>
           </Dialog>
           {/* Dialog for multiple users deletion */}
@@ -332,15 +332,15 @@ export default function UserList() {
             open={deleteMultipleDialogOpen}
             onClose={() => setDeleteMultipleDialogOpen(false)}
           >
-            <DialogTitle>Delete Users</DialogTitle>
+            <DialogTitle>Eliminar Usuarios</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Are you sure you want to delete the selected users? This action cannot be undone.
+                ¿Estás seguro de eliminar a los usuarios seleccionados? Esta acción no se puede deshacer.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setDeleteMultipleDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleConfirmDeleteRows} color="primary">Delete</Button>
+              <Button onClick={() => setDeleteMultipleDialogOpen(false)}>Cancelar</Button>
+              <Button onClick={handleConfirmDeleteRows} color="primary">Eliminar</Button>
             </DialogActions>
           </Dialog>
         </Container>

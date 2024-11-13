@@ -104,14 +104,14 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
         console.log(formValues)
         await axios.post('/api/account/create-user', formValues);
       }
-      enqueueSnackbar(!isEdit ? 'User created successfully!' : 'User updated successfully!');
+      enqueueSnackbar(!isEdit ? '!Usuario creado exitosamente!' : '!Usuario modificado exitosamente!');
       if (!isEdit) {
-        alert(`User created successfully! Email: ${formValues.email}, Password: ${password}`);
+        alert(`!Usuario creado exitosamente! Email: ${formValues.email}, Contraseña: ${password}`);
       }
       push(PATH_DASHBOARD.user.list);
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Failed to save user', { variant: 'error' });
+      enqueueSnackbar('Error al guardar usuario', { variant: 'error' });
     }
   };
 
@@ -205,11 +205,11 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               label={
                 <>
                   <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Email Verified
+                    Email Verificado
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     Disabling this will automatically send the user a verification email
-                  </Typography>
+                  </Typography> */}
                 </>
               }
               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
@@ -227,11 +227,11 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="displayName" label="Full Name" />
-              <RHFTextField name="email" label="Email Address" />
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="displayName" label="Nombre Completo" />
+              <RHFTextField name="email" label="Email" />
+              <RHFTextField name="phoneNumber" label="Número Teléfono" />
 
-              <RHFSelect name="country" label="Country" placeholder="Country">
+              <RHFSelect name="country" label="País" placeholder="Country">
                 <option value="" />
                 {countries.map((option) => (
                   <option key={option.code} value={option.label}>
@@ -240,17 +240,17 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="state" label="State/Region" />
-              <RHFTextField name="city" label="City" />
-              <RHFTextField name="address" label="Address" />
-              <RHFTextField name="zipCode" label="Zip/Code" />
-              <RHFTextField name="company" label="Company" />
-              <RHFTextField name="role" label="Role" />
+              <RHFTextField name="state" label="Estado/Región" />
+              <RHFTextField name="city" label="Ciudad" />
+              <RHFTextField name="address" label="Dirección" />
+              <RHFTextField name="zipCode" label="Código Postal" />
+              <RHFTextField name="company" label="Empresa" />
+              <RHFTextField name="role" label="Rol" />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Create User' : 'Save Changes'}
+                {!isEdit ? 'Crear Usuario' : 'Guardar Cambios'}
               </LoadingButton>
             </Stack>
           </Card>

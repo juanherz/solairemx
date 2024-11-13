@@ -15,9 +15,9 @@ export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
 
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
-    newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
-    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+    oldPassword: Yup.string().required('Antigua contraseña requerida'),
+    newPassword: Yup.string().min(6, 'Contraseña necesita al menos 6 caracteres').required('Nueva contraseña requerida'),
+    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Contraseñas deben coincidir'),
   });
 
   const defaultValues = {
@@ -41,7 +41,7 @@ export default function AccountChangePassword() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      enqueueSnackbar('Update success!');
+      enqueueSnackbar('¡Actualización exitosa!');
     } catch (error) {
       console.error(error);
     }
@@ -51,14 +51,14 @@ export default function AccountChangePassword() {
     <Card sx={{ p: 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="flex-end">
-          <RHFTextField name="oldPassword" type="password" label="Old Password" />
+          <RHFTextField name="oldPassword" type="password" label="Antigua Contraseña" />
 
-          <RHFTextField name="newPassword" type="password" label="New Password" />
+          <RHFTextField name="newPassword" type="password" label="Nueva Contraseña" />
 
-          <RHFTextField name="confirmNewPassword" type="password" label="Confirm New Password" />
+          <RHFTextField name="confirmNewPassword" type="password" label="Confirmar nueva contraseña" />
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save Changes
+            Guardar cambios
           </LoadingButton>
         </Stack>
       </FormProvider>

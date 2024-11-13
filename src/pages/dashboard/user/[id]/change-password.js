@@ -57,7 +57,7 @@ export default function ChangePassword() {
         setLoading(false);
       } catch (error) {
         console.error(error);
-        enqueueSnackbar('Failed to load user data', { variant: 'error' });
+        enqueueSnackbar('Error al cargar datos de usuario', { variant: 'error' });
         setLoading(false);
       }
     };
@@ -70,25 +70,25 @@ export default function ChangePassword() {
   const onSubmit = async (data) => {
     try {
       await axios.put(`/api/account/change-password/${id}`, { password: data.newPassword });
-      enqueueSnackbar('Password updated successfully!', { variant: 'success' });
+      enqueueSnackbar('¡Contraseña actualizada correctamente!', { variant: 'success' });
       reset();
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Failed to update password', { variant: 'error' });
+      enqueueSnackbar('Error al cambiar contraseña', { variant: 'error' });
       setError('afterSubmit', { ...error, message: error.message });
     }
   };
 
   return (
     <RoleBasedGuard accessibleRoles={['admin']}>
-      <Page title="User: Change Password">
+      <Page title="Userios: Carmbiar contraseña">
         <Container maxWidth="sm">
           <HeaderBreadcrumbs
-            heading={`Change Password for ${userName}`}
+            heading={`Cambiar contraseña para ${userName}`}
             links={[
               { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              { name: 'User', href: PATH_DASHBOARD.user.list },
-              { name: 'Change Password' },
+              { name: 'Usuarios', href: PATH_DASHBOARD.user.list },
+              { name: 'Cambiar Contraseña' },
             ]}
           />
 
@@ -104,7 +104,7 @@ export default function ChangePassword() {
 
                   <RHFTextField
                     name="newPassword"
-                    label="New Password"
+                    label="Nueva Contraseña"
                     type={showPassword ? 'text' : 'password'}
                     InputProps={{
                       endAdornment: (
@@ -120,7 +120,7 @@ export default function ChangePassword() {
 
                 <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Change Password
+                    Cambiar Contraseña
                   </LoadingButton>
                 </Stack>
               </FormProvider>

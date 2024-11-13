@@ -90,7 +90,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Delete
+                Eliminar
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -99,7 +99,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
-                Edit
+                Editar
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -108,7 +108,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
                 }}
               >
                 <Iconify icon={'eva:key-fill'} />
-                Change Password
+                Cambiar Contraseña
               </MenuItem>
             </>
           }
