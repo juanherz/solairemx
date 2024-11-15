@@ -38,9 +38,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 NavbarVertical.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
+  role: PropTypes.string.isRequired,
 };
 
-export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
+export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, role }) {
   const theme = useTheme();
 
   const { pathname } = useRouter();
@@ -85,7 +86,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <NavbarAccount isCollapse={isCollapse} />
       </Stack>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <NavSectionVertical navConfig={navConfig(role)} isCollapse={isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
 

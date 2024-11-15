@@ -8,6 +8,7 @@ import { HEADER } from '../../../config';
 import { NavSectionHorizontal } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -27,11 +28,11 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-function NavbarHorizontal() {
+function NavbarHorizontal({ role }) {
   return (
     <RootStyle>
       <Container maxWidth={false}>
-        <NavSectionHorizontal navConfig={navConfig} />
+        <NavSectionHorizontal navConfig={navConfig(role)} />
       </Container>
     </RootStyle>
   );

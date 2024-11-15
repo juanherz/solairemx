@@ -34,7 +34,7 @@ export default function NavbarAccount({ isCollapse }) {
   const { user } = useAuth();
 
   return (
-    <NextLink href={PATH_DASHBOARD.user.account} passHref>
+    <NextLink href={PATH_DASHBOARD.calendar} passHref>
       <Link underline="none" color="inherit">
         <RootStyle
           sx={{

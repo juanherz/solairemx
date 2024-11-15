@@ -11,7 +11,10 @@ export default function Index() {
 
   useEffect(() => {
     if (pathname === PATH_DASHBOARD.user.root) {
-      push(PATH_DASHBOARD.user.profile);
+      try {push(PATH_DASHBOARD.user.profile);}
+      catch {
+        push(PATH_DASHBOARD.calendar);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);

@@ -13,6 +13,7 @@ import { HEADER, NAVBAR } from '../../config';
 import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,8 @@ export default function DashboardLayout({ children }) {
 
   const [open, setOpen] = useState(false);
 
+  const { user } = useAuth();
+
   const verticalLayout = themeLayout === 'vertical';
 
   if (verticalLayout) {
@@ -60,9 +63,9 @@ export default function DashboardLayout({ children }) {
         <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout} />
 
         {isDesktop ? (
-          <NavbarHorizontal />
+          <NavbarHorizontal role={user.role} />
         ) : (
-          <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+          <NavbarVertical role={user.role} isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
         )}
 
         <Box
@@ -94,7 +97,7 @@ export default function DashboardLayout({ children }) {
     >
       <DashboardHeader isCollapse={isCollapse} onOpenSidebar={() => setOpen(true)} />
 
-      <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+      <NavbarVertical role={user.role} isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
 
       <MainStyle collapseClick={collapseClick}>{children}</MainStyle>
     </Box>
