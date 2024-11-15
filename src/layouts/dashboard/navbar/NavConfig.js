@@ -22,6 +22,7 @@ const ICONS = {
   ecommerce: getIcon('ic_ecommerce'),
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
+  sales: getIcon('ic_ecommerce'), // Make sure you have an icon named 'ic_sales.svg'
 };
 
 const navConfig = (role) => {
@@ -38,6 +39,27 @@ const navConfig = (role) => {
     //     // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
     //   ],
     // },
+
+    // VENTAS
+    // ----------------------------------------------------------------------
+    {
+      subheader: 'Ventas',
+      roles: ['admin', 'user'],
+      items: [
+        {
+          title: 'Lista de Ventas',
+          icon: ICONS.banking,
+          path: PATH_DASHBOARD.sales.list,
+          roles: ['admin', 'user'],
+        },
+        {
+          title: 'Crear Venta',
+          icon: ICONS.ecommerce,
+          path: PATH_DASHBOARD.sales.new,
+          roles: ['admin', 'user'],
+        },
+      ],
+    },
 
     // MANAGEMENT
     // ----------------------------------------------------------------------

@@ -56,7 +56,7 @@ export default function UserEdit() {
   }
 
   return (
-    <Page title="Userios: Editar usuario">
+    <Page title="Usurios: Editar usuario">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Editar usuario"

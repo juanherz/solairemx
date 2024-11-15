@@ -1,0 +1,225 @@
+// src/sections/@dashboard/sales/SaleForm.js
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { LoadingButton } from '@mui/lab';
+import {
+  Box,
+  Card,
+  Grid,
+  TextField,
+  Button,
+  IconButton,
+  Typography,
+  FormControlLabel,
+  Switch,
+  MenuItem,
+} from '@mui/material';
+// import DeleteIcon from '@mui/icons-material/Delete';
+import axios from '../../../utils/axios';
+import { PATH_DASHBOARD } from '../../../routes/paths';
+
+export default function SaleForm({ isEdit, currentSale }) {
+  const { push } = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [items, setItems] = useState(currentSale?.items || [{ description: '', quantity: 1, unitPrice: 0 }]);
+  const [saleNumber, setSaleNumber] = useState(currentSale?.saleNumber || '');
+  const [currency, setCurrency] = useState(currentSale?.currency || 'MXN');
+
+  const defaultValues = {
+    customerName: currentSale?.customerName || '',
+    customerPhone: currentSale?.customerPhone || '',
+    saleNumber: saleNumber,
+    saleDate: currentSale?.saleDate || '',
+    saleType: currentSale?.saleType || 'Crédito', // Use 'Crédito' as default
+    national: currentSale?.national !== undefined ? currentSale.national : true,
+    currency: currency,
+    comments: currentSale?.comments || '',
+    location: currentSale?.location || '',
+    items: currentSale?.items || [{ description: '', quantity: 1, unitPrice: 0 }],
+  };
+
+  const { register, handleSubmit, watch, setValue } = useForm({ defaultValues });
+
+  useEffect(() => {
+    if (!isEdit) {
+      const generatedSaleNumber = `VENTA-${Date.now()}`;
+      setSaleNumber(generatedSaleNumber);
+      setValue('saleNumber', generatedSaleNumber);
+    }
+  }, [isEdit, setValue]);
+
+  const addItem = () => {
+    setItems([...items, { description: '', quantity: 1, unitPrice: 0 }]);
+  };
+
+  const removeItem = (index) => {
+    const newItems = items.filter((item, idx) => idx !== index);
+    setItems(newItems);
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      data.items = items;
+      data.saleNumber = saleNumber;
+      data.currency = currency;
+      if (isEdit) {
+        await axios.put(`/api/sales/${currentSale._id}`, data);
+        enqueueSnackbar('Venta actualizada exitosamente', { variant: 'success' });
+      } else {
+        await axios.post('/api/sales', data);
+        enqueueSnackbar('Venta creada exitosamente', { variant: 'success' });
+      }
+      push(PATH_DASHBOARD.sales.list);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Error al guardar la venta', { variant: 'error' });
+    }
+  };
+
+  const handleNationalChange = (event) => {
+    setValue('national', event.target.checked);
+    const selectedCurrency = event.target.checked ? 'MXN' : 'USD';
+    setCurrency(selectedCurrency);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Card sx={{ p: 3 }}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <TextField label="Nombre del Cliente" {...register('customerName')} fullWidth />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField label="Teléfono del Cliente" {...register('customerPhone')} fullWidth />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Número de Venta"
+              value={saleNumber}
+              InputProps={{ readOnly: true }}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Fecha de Venta"
+              type="date"
+              {...register('saleDate')}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              select
+              label="Tipo de Venta"
+              {...register('saleType')}
+              fullWidth
+              defaultValue={defaultValues.saleType}
+            >
+              <MenuItem value="Contado">Contado</MenuItem>
+              <MenuItem value="Crédito">Crédito</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={watch('national')}
+                  onChange={handleNationalChange}
+                />
+              }
+              label="Venta Nacional"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Moneda"
+              value={currency}
+              InputProps={{ readOnly: true }}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField label="Ubicación" {...register('location')} fullWidth />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField label="Comentarios" {...register('comments')} fullWidth multiline rows={3} />
+          </Grid>
+        </Grid>
+
+        <Typography variant="h6" sx={{ mt: 3 }}>
+          Productos
+        </Typography>
+        {items.map((item, index) => (
+          <Grid container spacing={2} key={index} sx={{ mt: 1 }}>
+            <Grid item xs={12} md={5}>
+              <TextField
+                label="Descripción"
+                value={item.description}
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[index].description = e.target.value;
+                  setItems(newItems);
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <TextField
+                label="Cantidad"
+                type="number"
+                value={item.quantity}
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[index].quantity = Number(e.target.value);
+                  setItems(newItems);
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <TextField
+                label="Precio Unitario"
+                type="number"
+                value={item.unitPrice}
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[index].unitPrice = Number(e.target.value);
+                  setItems(newItems);
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <TextField
+                label="Total"
+                value={item.quantity * item.unitPrice}
+                InputProps={{ readOnly: true }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={1}>
+              <IconButton onClick={() => removeItem(index)}>
+                {/* <DeleteIcon /> */}
+              </IconButton>
+            </Grid>
+          </Grid>
+        ))}
+
+        <Button variant="outlined" sx={{ mt: 2 }} onClick={addItem}>
+          Añadir Producto
+        </Button>
+
+        <Box sx={{ mt: 3, textAlign: 'right' }}>
+          <LoadingButton type="submit" variant="contained">
+            {isEdit ? 'Guardar Cambios' : 'Crear Venta'}
+          </LoadingButton>
+        </Box>
+      </Card>
+    </form>
+  );
+}

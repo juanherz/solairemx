@@ -63,6 +63,15 @@ export const PATH_DASHBOARD = {
     changePassword: (id) => path(ROOTS_DASHBOARD, `/user/${id}/change-password`),
     // demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
+
+  sales: {
+    root: path(ROOTS_DASHBOARD, '/sales'),
+    list: path(ROOTS_DASHBOARD, '/sales/list'),
+    new: path(ROOTS_DASHBOARD, '/sales/new'),
+    view: (id) => path(ROOTS_DASHBOARD, `/sales/${id}`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/sales/${id}/edit`),
+    customer: (customerName) => path(ROOTS_DASHBOARD, `/sales/customer/${customerName}`),
+  },
   // eCommerce: {
   //   root: path(ROOTS_DASHBOARD, '/e-commerce'),
   //   shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),

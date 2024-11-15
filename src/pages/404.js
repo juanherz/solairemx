@@ -38,19 +38,18 @@ export default function Page404() {
           <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
             <m.div variants={varBounce().in}>
               <Typography variant="h3" paragraph>
-                Sorry, page not found!
+                ¡Disculpa, página no encontrada!
               </Typography>
             </m.div>
             <Typography sx={{ color: 'text.secondary' }}>
-              Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be sure to check
-              your spelling.
+              Disculpa, no pudimos encontrar la página que estás buscando. Verifica si escribiste el URL correctamente.
             </Typography>
             <m.div variants={varBounce().in}>
               <PageNotFoundIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
             </m.div>
             <NextLink href="/" passHref>
               <Button size="large" variant="contained">
-                Go to Home
+                Volver al inicio
               </Button>
             </NextLink>
           </Box>
