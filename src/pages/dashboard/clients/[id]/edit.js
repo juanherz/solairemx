@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import ClientForm from '../../../sections/@dashboard/clients/ClientForm';
-import Layout from '../../../layouts';
-import RoleBasedGuard from '../../../guards/RoleBasedGuard';
-import axios from '../../../utils/axios';
+import ClientForm from 'src/sections/@dashboard/clients/ClientForm';
+import Layout from '../../../../layouts';
+import RoleBasedGuard from '../../../../guards/RoleBasedGuard';
+import axios from '../../../../utils/axios';
 
 ClientEdit.getLayout = function getLayout(page) {
   return (
