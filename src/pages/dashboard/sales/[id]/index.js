@@ -96,8 +96,9 @@ export default function SaleDetails() {
 
         <Card sx={{ p: 3 }}>
           <Typography variant="h6">Información de la Venta</Typography>
-          <Typography>Cliente: {sale.customerName}</Typography>
-          <Typography>Teléfono: {sale.customerPhone}</Typography>
+          <Typography>Cliente: {sale.client?.name}</Typography>
+          <Typography>Teléfono: {sale.client?.phone}</Typography>
+          <Typography>Email: {sale.client?.email}</Typography>
           <Typography>Fecha de Venta: {new Date(sale.saleDate).toLocaleDateString()}</Typography>
           <Typography>Tipo de Venta: {sale.saleType}</Typography>
           <Typography>Moneda: {sale.currency}</Typography>

@@ -11,7 +11,7 @@ SaleTableRow.propTypes = {
 };
 
 export default function SaleTableRow({ row, onViewRow }) {
-  const { saleNumber, customerName, saleDate, totalAmount, amountOwed, status, national, currency } = row;
+  const { saleNumber, client, saleDate, totalAmount, amountOwed, status, national, currency } = row;
 
   return (
     <TableRow hover>
@@ -21,7 +21,7 @@ export default function SaleTableRow({ row, onViewRow }) {
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{customerName}</TableCell>
+      <TableCell align="left">{client?.name || 'Sin Cliente'}</TableCell>
 
       <TableCell align="left">{new Date(saleDate).toLocaleDateString()}</TableCell>
 

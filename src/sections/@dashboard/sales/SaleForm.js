@@ -15,10 +15,12 @@ import {
   FormControlLabel,
   Switch,
   MenuItem,
+  Autocomplete
 } from '@mui/material';
 // import DeleteIcon from '@mui/icons-material/Delete';
 import axios from '../../../utils/axios';
 import { PATH_DASHBOARD } from '../../../routes/paths';
+
 
 export default function SaleForm({ isEdit, currentSale }) {
   const { push } = useRouter();
@@ -27,6 +29,21 @@ export default function SaleForm({ isEdit, currentSale }) {
   const [items, setItems] = useState(currentSale?.items || [{ description: '', quantity: 1, unitPrice: 0 }]);
   const [saleNumber, setSaleNumber] = useState(currentSale?.saleNumber || '');
   const [currency, setCurrency] = useState(currentSale?.currency || 'MXN');
+  const [clients, setClients] = useState([]);
+  const [selectedClient, setSelectedClient] = useState(currentSale?.client || null);
+
+  useEffect(() => {
+    // Fetch clients from the backend
+    const fetchClients = async () => {
+      try {
+        const response = await axios.get('/api/clients');
+        setClients(response.data);
+      } catch (error) {
+        console.error('Error fetching clients:', error);
+      }
+    };
+    fetchClients();
+  }, []);
 
   const defaultValues = {
     customerName: currentSale?.customerName || '',
@@ -65,6 +82,7 @@ export default function SaleForm({ isEdit, currentSale }) {
       data.items = items;
       data.saleNumber = saleNumber;
       data.currency = currency;
+      data.client = selectedClient?._id; // Set the client ID
       if (isEdit) {
         await axios.put(`/api/sales/${currentSale._id}`, data);
         enqueueSnackbar('Venta actualizada exitosamente', { variant: 'success' });
@@ -78,7 +96,7 @@ export default function SaleForm({ isEdit, currentSale }) {
       enqueueSnackbar('Error al guardar la venta', { variant: 'error' });
     }
   };
-
+  
   const handleNationalChange = (event) => {
     setValue('national', event.target.checked);
     const selectedCurrency = event.target.checked ? 'MXN' : 'USD';
@@ -90,11 +108,47 @@ export default function SaleForm({ isEdit, currentSale }) {
       <Card sx={{ p: 3 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <TextField label="Nombre del Cliente" {...register('customerName')} fullWidth />
+            <Autocomplete
+              options={clients}
+              getOptionLabel={(option) => option.name}
+              value={selectedClient}
+              onChange={(event, newValue) => {
+                setSelectedClient(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Cliente" placeholder="Selecciona un cliente" fullWidth />
+              )}
+            />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField label="Teléfono del Cliente" {...register('customerPhone')} fullWidth />
+            <Button
+              variant="outlined"
+              onClick={() => push(PATH_DASHBOARD.clients.new)}
+              sx={{ mt: 2 }}
+            >
+              Añadir Nuevo Cliente
+            </Button>
           </Grid>
+          {selectedClient && (
+            <>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Teléfono del Cliente"
+                  value={selectedClient.phone || ''}
+                  InputProps={{ readOnly: true }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Email del Cliente"
+                  value={selectedClient.email || ''}
+                  InputProps={{ readOnly: true }}
+                  fullWidth
+                />
+              </Grid>
+            </>
+          )}
           <Grid item xs={12} md={6}>
             <TextField
               label="Número de Venta"

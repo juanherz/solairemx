@@ -3,6 +3,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
+import Iconify from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -58,6 +59,19 @@ const navConfig = (role) => {
           path: PATH_DASHBOARD.sales.new,
           roles: ['admin', 'user'],
         },
+      ],
+    },
+
+    {
+      subheader: 'Gestión',
+      items: [
+        // ... existing items ...
+        {
+          title: 'Clientes',
+          path: PATH_DASHBOARD.clients.list,
+          icon: <Iconify icon="eva:people-fill" />,
+        },
+        // ... existing items ...
       ],
     },
 
