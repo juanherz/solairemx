@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import ClientForm from 'src/sections/@dashboard/clients/ClientForm';
+import ClientForm from '../../../../sections/@dashboard/clients/ClientForm';
 import Layout from '../../../../layouts';
 import RoleBasedGuard from '../../../../guards/RoleBasedGuard';
 import axios from '../../../../utils/axios';
