@@ -10,6 +10,10 @@ import {
   TextField,
   Box,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import Layout from '../../../../layouts';
 import Page from '../../../../components/Page';
@@ -30,12 +34,14 @@ SaleDetails.getLayout = function getLayout(page) {
 };
 
 export default function SaleDetails() {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const { id } = query;
   const { enqueueSnackbar } = useSnackbar();
 
   const [sale, setSale] = useState(null);
   const [payment, setPayment] = useState({ date: '', amount: 0, comments: '' });
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+
 
   useEffect(() => {
     if (id) {
@@ -77,6 +83,19 @@ export default function SaleDetails() {
       enqueueSnackbar(errorMsg, { variant: 'error' });
     }
   };
+
+  const handleDeleteSale = async () => {
+    try {
+      await axios.delete(`/api/sales/${id}`);
+      enqueueSnackbar('Venta eliminada exitosamente', { variant: 'success' });
+      push(PATH_DASHBOARD.sales.list); // Redirect to sales list
+    } catch (error) {
+      console.error('Failed to delete sale:', error);
+      const errorMsg = error.response?.data?.msg || 'Error al eliminar la venta';
+      enqueueSnackbar(errorMsg, { variant: 'error' });
+    }
+  };
+
 
   if (!sale) {
     return null;
@@ -183,6 +202,35 @@ export default function SaleDetails() {
               </Box>
             </>
           )}
+          <Box sx={{ mt: 2, textAlign: 'right' }}>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<Iconify icon="eva:trash-2-outline" />}
+              onClick={() => setOpenConfirmDelete(true)}
+            >
+              Eliminar Venta
+            </Button>
+          </Box>
+          <Dialog
+            open={openConfirmDelete}
+            onClose={() => setOpenConfirmDelete(false)}
+          >
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogContent>
+              <Typography>
+                ¿Estás seguro de que deseas eliminar esta venta? Esta acción no se puede deshacer.
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenConfirmDelete(false)} color="inherit">
+                Cancelar
+              </Button>
+              <Button onClick={handleDeleteSale} color="error">
+                Eliminar
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Card>
       </Container>
     </Page>

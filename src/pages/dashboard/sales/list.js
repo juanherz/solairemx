@@ -49,6 +49,33 @@ SalesList.getLayout = function getLayout(page) {
   );
 };
 
+function applySortFilter({ tableData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order2 = comparator(a[0], b[0]);
+    if (order2 !== 0) return order2;
+    return a[1] - b[1];
+  });
+
+  let filteredData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    const filterNameLower = filterName.toLowerCase();
+    filteredData = filteredData.filter((item) => {
+      const clientName = item.client?.name?.toLowerCase() || '';
+      const saleNumber = item.saleNumber.toLowerCase();
+      return clientName.includes(filterNameLower) || saleNumber.includes(filterNameLower);
+    });
+  }
+
+  if (filterStatus !== 'all') {
+    filteredData = filteredData.filter((item) => item.status === filterStatus);
+  }
+
+  return filteredData;
+}
+
 export default function SalesList() {
   const {
     page,
@@ -182,30 +209,4 @@ export default function SalesList() {
       </Container>
     </Page>
   );
-}
-
-function applySortFilter({ tableData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order2 = comparator(a[0], b[0]);
-    if (order2 !== 0) return order2;
-    return a[1] - b[1];
-  });
-
-  let filteredData = stabilizedThis.map((el) => el[0]);
-
-
-  if (filterName) {
-    filteredData = filteredData.filter(
-      (item) =>
-        item.customerName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        item.saleNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-  if (filterStatus !== 'all') {
-    filteredData = filteredData.filter((item) => item.status === filterStatus);
-  }
-
-  return filteredData;
 }

@@ -84,6 +84,10 @@ export default function ClientsList() {
     }
   };
 
+  const handleViewSummary = (id) => {
+    push(`${PATH_DASHBOARD.clients.root}/${id}/summary`);
+  };
+
   const handleEditRow = (id) => {
     push(`${PATH_DASHBOARD.clients.root}/${id}/edit`);
   };
@@ -134,6 +138,7 @@ export default function ClientsList() {
                         row={row}
                         onEditRow={() => handleEditRow(row._id)}
                         onDeleteRow={() => handleDeleteRow(row._id)}
+                        onViewSummary={() => handleViewSummary(row._id)}
                       />
                     ))}
 

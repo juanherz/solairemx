@@ -1,16 +1,14 @@
 // src/sections/@dashboard/clients/list/ClientTableRow.js
 
-import PropTypes from 'prop-types';
 import { TableRow, TableCell, Typography, Button } from '@mui/material';
 import Iconify from '../../../../components/Iconify';
 
-ClientTableRow.propTypes = {
-  row: PropTypes.object,
-  onEditRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
-};
-
-export default function ClientTableRow({ row, onEditRow, onDeleteRow }) {
+export default function ClientTableRow({
+  row,
+  onEditRow,
+  onDeleteRow,
+  onViewSummary,
+}) {
   const { name, company, email, phone } = row;
 
   return (
@@ -28,6 +26,14 @@ export default function ClientTableRow({ row, onEditRow, onDeleteRow }) {
       <TableCell align="left">{phone}</TableCell>
 
       <TableCell align="right">
+        <Button
+          size="small"
+          color="primary"
+          onClick={onViewSummary}
+          startIcon={<Iconify icon="eva:pie-chart-2-outline" />}
+        >
+          Resumen
+        </Button>
         <Button
           size="small"
           color="inherit"

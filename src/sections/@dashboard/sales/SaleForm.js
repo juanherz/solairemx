@@ -17,9 +17,10 @@ import {
   MenuItem,
   Autocomplete
 } from '@mui/material';
-// import DeleteIcon from '@mui/icons-material/Delete';
 import axios from '../../../utils/axios';
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import Iconify from '../../../components/Iconify'; // Import Iconify
+
 
 
 export default function SaleForm({ isEdit, currentSale }) {
@@ -73,8 +74,10 @@ export default function SaleForm({ isEdit, currentSale }) {
   };
 
   const removeItem = (index) => {
-    const newItems = items.filter((item, idx) => idx !== index);
-    setItems(newItems);
+    if (items.length > 1) {
+      const newItems = items.filter((item, idx) => idx !== index);
+      setItems(newItems);
+    }
   };
 
   const onSubmit = async (data) => {
@@ -257,8 +260,11 @@ export default function SaleForm({ isEdit, currentSale }) {
               />
             </Grid>
             <Grid item xs={12} md={1}>
-              <IconButton onClick={() => removeItem(index)}>
-                {/* <DeleteIcon /> */}
+              <IconButton
+                onClick={() => removeItem(index)}
+                disabled={items.length <= 1}
+              >
+                <Iconify icon="eva:trash-2-outline" />
               </IconButton>
             </Grid>
           </Grid>
