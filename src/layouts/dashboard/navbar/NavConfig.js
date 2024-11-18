@@ -65,13 +65,16 @@ const navConfig = (role) => {
     {
       subheader: 'Gestión',
       items: [
-        // ... existing items ...
         {
           title: 'Clientes',
           path: PATH_DASHBOARD.clients.list,
           icon: <Iconify icon="eva:people-fill" />,
         },
-        // ... existing items ...
+        {
+          title: 'Productos',
+          path: PATH_DASHBOARD.products.list,
+          icon: <Iconify icon="eva:cube-fill" />,
+        },
       ],
     },
 

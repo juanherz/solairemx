@@ -78,6 +78,12 @@ export const PATH_DASHBOARD = {
     new: '/dashboard/clients/new',
     edit: (id) => `/dashboard/clients/${id}/edit`,
   },
+  products: {
+    root: '/dashboard/products',
+    list: '/dashboard/products/list',
+    new: '/dashboard/products/new',
+    edit: (id) => `/dashboard/products/${id}/edit`,
+  },
   // eCommerce: {
   //   root: path(ROOTS_DASHBOARD, '/e-commerce'),
   //   shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),

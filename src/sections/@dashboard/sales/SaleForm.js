@@ -27,11 +27,15 @@ export default function SaleForm({ isEdit, currentSale }) {
   const { push } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [items, setItems] = useState(currentSale?.items || [{ description: '', quantity: 1, unitPrice: 0 }]);
+  const [items, setItems] = useState(
+    currentSale?.items || [{ product: null, description: '', quantity: 1, unitPrice: 0 }]
+  );  
   const [saleNumber, setSaleNumber] = useState(currentSale?.saleNumber || '');
   const [currency, setCurrency] = useState(currentSale?.currency || 'MXN');
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(currentSale?.client || null);
+  const [products, setProducts] = useState([]);
+
 
   useEffect(() => {
     // Fetch clients from the backend
@@ -46,9 +50,20 @@ export default function SaleForm({ isEdit, currentSale }) {
     fetchClients();
   }, []);
 
+  useEffect(() => {
+    // Fetch products from the backend
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('/api/products');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const defaultValues = {
-    customerName: currentSale?.customerName || '',
-    customerPhone: currentSale?.customerPhone || '',
     saleNumber: saleNumber,
     saleDate: currentSale?.saleDate || '',
     saleType: currentSale?.saleType || 'Crédito', // Use 'Crédito' as default
@@ -56,7 +71,6 @@ export default function SaleForm({ isEdit, currentSale }) {
     currency: currency,
     comments: currentSale?.comments || '',
     location: currentSale?.location || '',
-    items: currentSale?.items || [{ description: '', quantity: 1, unitPrice: 0 }],
   };
 
   const { register, handleSubmit, watch, setValue } = useForm({ defaultValues });
@@ -70,7 +84,7 @@ export default function SaleForm({ isEdit, currentSale }) {
   }, [isEdit, setValue]);
 
   const addItem = () => {
-    setItems([...items, { description: '', quantity: 1, unitPrice: 0 }]);
+    setItems([...items, { product: null, description: '', quantity: 1, unitPrice: 0 }]);
   };
 
   const removeItem = (index) => {
@@ -82,7 +96,12 @@ export default function SaleForm({ isEdit, currentSale }) {
 
   const onSubmit = async (data) => {
     try {
-      data.items = items;
+      data.items = items.map((item) => ({
+        product: item.product?._id || null,
+        description: item.description,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      }));      
       data.saleNumber = saleNumber;
       data.currency = currency;
       data.client = selectedClient?._id; // Set the client ID
@@ -214,15 +233,19 @@ export default function SaleForm({ isEdit, currentSale }) {
         {items.map((item, index) => (
           <Grid container spacing={2} key={index} sx={{ mt: 1 }}>
             <Grid item xs={12} md={5}>
-              <TextField
-                label="Descripción"
-                value={item.description}
-                onChange={(e) => {
+              <Autocomplete
+                options={products}
+                getOptionLabel={(option) => option.name}
+                value={item.product}
+                onChange={(event, newValue) => {
                   const newItems = [...items];
-                  newItems[index].description = e.target.value;
+                  newItems[index].product = newValue;
+                  newItems[index].description = newValue ? newValue.name : '';
                   setItems(newItems);
                 }}
-                fullWidth
+                renderInput={(params) => (
+                  <TextField {...params} label="Producto" placeholder="Selecciona un producto" fullWidth />
+                )}
               />
             </Grid>
             <Grid item xs={12} md={2}>

@@ -129,10 +129,9 @@ export default function SaleDetails() {
           </Typography>
           {sale.items.map((item, index) => (
             <Typography key={index}>
-              {item.description} - Cantidad: {item.quantity} - Precio Unitario: {item.unitPrice} - Total: {item.quantity * item.unitPrice}
+              Producto: {item.product?.name || item.description} - Cantidad: {item.quantity} - Precio Unitario: {item.unitPrice} - Total: {item.quantity * item.unitPrice}
             </Typography>
           ))}
-
         <Typography variant="h6" sx={{ mt: 3 }}>
             Pagos Realizados
           </Typography>
