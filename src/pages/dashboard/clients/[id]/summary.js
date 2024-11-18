@@ -13,6 +13,10 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import Layout from '../../../../layouts';
 import Page from '../../../../components/Page';
@@ -37,6 +41,7 @@ export default function ClientSummary() {
 
   const [client, setClient] = useState(null);
   const [sales, setSales] = useState([]);
+  const [sortOrder, setSortOrder] = useState('desc'); // Default to descending order
 
   useEffect(() => {
     if (id) {
@@ -60,11 +65,36 @@ export default function ClientSummary() {
     return null;
   }
 
-  // Calculate statistics
-  const totalSales = sales.length;
-  const totalAmount = sales.reduce((sum, sale) => sum + sale.totalAmount, 0);
-  const totalPaid = sales.reduce((sum, sale) => sum + sale.amountPaid, 0);
-  const totalOwed = sales.reduce((sum, sale) => sum + sale.amountOwed, 0);
+  // Get the list of currencies used in the sales
+  const currencies = [...new Set(sales.map((sale) => sale.currency))];
+
+  const statsByCurrency = {};
+
+  currencies.forEach((currency) => {
+    const salesInCurrency = sales.filter((sale) => sale.currency === currency);
+    const totalSales = salesInCurrency.length;
+    const totalAmount = salesInCurrency.reduce((sum, sale) => sum + sale.totalAmount, 0);
+    const totalPaid = salesInCurrency.reduce((sum, sale) => sum + sale.amountPaid, 0);
+    const totalOwed = salesInCurrency.reduce((sum, sale) => sum + sale.amountOwed, 0);
+
+    statsByCurrency[currency] = {
+      totalSales,
+      totalAmount,
+      totalPaid,
+      totalOwed,
+    };
+  });
+
+  // Sort sales based on saleDate
+  const sortedSales = [...sales].sort((a, b) => {
+    const dateA = new Date(a.saleDate);
+    const dateB = new Date(b.saleDate);
+    if (sortOrder === 'asc') {
+      return dateA - dateB;
+    } else {
+      return dateB - dateA;
+    }
+  });
 
   return (
     <Page title={`Cliente: ${client.name}`}>
@@ -95,14 +125,40 @@ export default function ClientSummary() {
           <Typography variant="h6" sx={{ mt: 3 }}>
             Estadísticas
           </Typography>
-          <Typography>Total de Ventas: {totalSales}</Typography>
-          <Typography>Total Vendido: {totalAmount}</Typography>
-          <Typography>Total Pagado: {totalPaid}</Typography>
-          <Typography>Total Adeudado: {totalOwed}</Typography>
+
+          {currencies.map((currency) => (
+            <div key={currency} style={{ marginBottom: '16px' }}>
+              <Typography variant="subtitle1">Moneda: {currency}</Typography>
+              <Typography>Total de Ventas: {statsByCurrency[currency].totalSales}</Typography>
+              <Typography>
+                Total Vendido: {statsByCurrency[currency].totalAmount} {currency}
+              </Typography>
+              <Typography>
+                Total Pagado: {statsByCurrency[currency].totalPaid} {currency}
+              </Typography>
+              <Typography>
+                Total Adeudado: {statsByCurrency[currency].totalOwed} {currency}
+              </Typography>
+            </div>
+          ))}
 
           <Typography variant="h6" sx={{ mt: 3 }}>
             Ventas
           </Typography>
+
+          <FormControl sx={{ mb: 2, minWidth: 160 }}>
+            <InputLabel id="sort-order-label">Ordenar por Fecha</InputLabel>
+            <Select
+              labelId="sort-order-label"
+              value={sortOrder}
+              label="Ordenar por Fecha"
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <MenuItem value="asc">Ascendente</MenuItem>
+              <MenuItem value="desc">Descendente</MenuItem>
+            </Select>
+          </FormControl>
+
           <TableContainer>
             <Table>
               <TableHead>
@@ -112,18 +168,20 @@ export default function ClientSummary() {
                   <TableCell>Total</TableCell>
                   <TableCell>Pagado</TableCell>
                   <TableCell>Adeudado</TableCell>
+                  <TableCell>Moneda</TableCell>
                   <TableCell>Estado</TableCell>
                   <TableCell>Acciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {sales.map((sale) => (
+                {sortedSales.map((sale) => (
                   <TableRow key={sale._id}>
                     <TableCell>{sale.saleNumber}</TableCell>
                     <TableCell>{new Date(sale.saleDate).toLocaleDateString()}</TableCell>
                     <TableCell>{sale.totalAmount}</TableCell>
                     <TableCell>{sale.amountPaid}</TableCell>
                     <TableCell>{sale.amountOwed}</TableCell>
+                    <TableCell>{sale.currency}</TableCell>
                     <TableCell>{sale.status}</TableCell>
                     <TableCell>
                       <Button
