@@ -1,4 +1,5 @@
 // src/sections/@dashboard/sales/SaleForm.js
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -15,83 +16,103 @@ import {
   FormControlLabel,
   Switch,
   MenuItem,
-  Autocomplete
+  Autocomplete,
 } from '@mui/material';
 import axios from '../../../utils/axios';
 import { PATH_DASHBOARD } from '../../../routes/paths';
-import Iconify from '../../../components/Iconify'; // Import Iconify
-
-
+import Iconify from '../../../components/Iconify';
 
 export default function SaleForm({ isEdit, currentSale }) {
-  const { push } = useRouter();
+  const { push, query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   const [items, setItems] = useState(
     currentSale?.items || [{ product: null, description: '', quantity: 1, unitPrice: 0 }]
-  );  
+  );
   const [saleNumber, setSaleNumber] = useState(currentSale?.saleNumber || '');
   const [currency, setCurrency] = useState(currentSale?.currency || 'MXN');
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(currentSale?.client || null);
   const [products, setProducts] = useState([]);
-
-
-  useEffect(() => {
-    // Fetch clients from the backend
-    const fetchClients = async () => {
-      try {
-        const response = await axios.get('/api/clients');
-        setClients(response.data);
-      } catch (error) {
-        console.error('Error fetching clients:', error);
-      }
-    };
-    fetchClients();
-  }, []);
-
-  useEffect(() => {
-    // Fetch products from the backend
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('/api/products');
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  const [orderData, setOrderData] = useState(null);
 
   const defaultValues = {
     saleNumber: saleNumber,
-    saleDate: currentSale?.saleDate || '',
-    saleType: currentSale?.saleType || 'Crédito', // Use 'Crédito' as default
+    saleDate: currentSale?.saleDate || new Date().toISOString().split('T')[0],
+    saleType: currentSale?.saleType || 'Crédito',
     national: currentSale?.national !== undefined ? currentSale.national : true,
     currency: currency,
     comments: currentSale?.comments || '',
     location: currentSale?.location || '',
   };
 
-  const { register, handleSubmit, watch, setValue } = useForm({ defaultValues });
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({ defaultValues });
 
   useEffect(() => {
-    if (!isEdit) {
-      const generatedSaleNumber = `VENTA-${Date.now()}`;
-      setSaleNumber(generatedSaleNumber);
-      setValue('saleNumber', generatedSaleNumber);
-    }
-  }, [isEdit, setValue]);
+    const fetchInitialData = async () => {
+      try {
+        // Fetch clients and products
+        const [clientsResponse, productsResponse] = await Promise.all([
+          axios.get('/api/clients'),
+          axios.get('/api/products'),
+        ]);
+        const fetchedClients = clientsResponse.data;
+        const fetchedProducts = productsResponse.data;
+        setClients(fetchedClients);
+        setProducts(fetchedProducts);
+
+        if (query.orderId) {
+          const orderResponse = await axios.get(`/api/orders/${query.orderId}`);
+          const order = orderResponse.data;
+
+          setSelectedClient(order.client);
+
+          // Map order items to sale items
+          const saleItems = order.items.map((item) => {
+            // Find matching product from fetched products
+            const product = fetchedProducts.find((p) => p._id === item.product._id);
+            return {
+              product: product || item.product,
+              description: item.description,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+            };
+          });
+          setItems(saleItems);
+
+          setCurrency(order.currency);
+          setValue('saleType', 'Crédito'); // Set default or based on your preference
+          setValue('location', order.location);
+          setValue('comments', order.comments);
+          setOrderData({ _id: order._id }); // Ensure _id is included
+        }
+
+        if (!isEdit) {
+          const generatedSaleNumber = `VENTA-${Date.now()}`;
+          setSaleNumber(generatedSaleNumber);
+          setValue('saleNumber', generatedSaleNumber);
+        }
+      } catch (error) {
+        console.error('Error initializing data:', error);
+      }
+    };
+
+    fetchInitialData();
+  }, [isEdit, setValue, query.orderId]);
 
   const addItem = () => {
     setItems([...items, { product: null, description: '', quantity: 1, unitPrice: 0 }]);
   };
 
   const removeItem = (index) => {
-    if (items.length > 1) {
-      const newItems = items.filter((item, idx) => idx !== index);
-      setItems(newItems);
-    }
+    const newItems = items.filter((item, idx) => idx !== index);
+    setItems(newItems);
+  };
+
+  const handleNationalChange = (event) => {
+    setValue('national', event.target.checked);
+    const selectedCurrency = event.target.checked ? 'MXN' : 'USD';
+    setCurrency(selectedCurrency);
   };
 
   const onSubmit = async (data) => {
@@ -101,10 +122,13 @@ export default function SaleForm({ isEdit, currentSale }) {
         description: item.description,
         quantity: item.quantity,
         unitPrice: item.unitPrice,
-      }));      
+      }));
       data.saleNumber = saleNumber;
       data.currency = currency;
-      data.client = selectedClient?._id; // Set the client ID
+      data.client = selectedClient?._id;
+      if (orderData) {
+        data.order = orderData._id; // Include the order ID to link the sale
+      }
       if (isEdit) {
         await axios.put(`/api/sales/${currentSale._id}`, data);
         enqueueSnackbar('Venta actualizada exitosamente', { variant: 'success' });
@@ -118,83 +142,61 @@ export default function SaleForm({ isEdit, currentSale }) {
       enqueueSnackbar('Error al guardar la venta', { variant: 'error' });
     }
   };
-  
-  const handleNationalChange = (event) => {
-    setValue('national', event.target.checked);
-    const selectedCurrency = event.target.checked ? 'MXN' : 'USD';
-    setCurrency(selectedCurrency);
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card sx={{ p: 3 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Autocomplete
-              options={clients}
-              getOptionLabel={(option) => option.name}
-              value={selectedClient}
-              onChange={(event, newValue) => {
-                setSelectedClient(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Cliente" placeholder="Selecciona un cliente" fullWidth />
-              )}
+        {/* Client Selection */}
+        <Autocomplete
+          options={clients}
+          getOptionLabel={(option) => option.name}
+          value={selectedClient}
+          onChange={(event, newValue) => {
+            setSelectedClient(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Cliente"
+              placeholder="Selecciona un cliente"
+              fullWidth
+              error={Boolean(errors.client)}
+              helperText={errors.client ? 'El cliente es requerido' : ''}
             />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Button
-              variant="outlined"
-              onClick={() => push(PATH_DASHBOARD.clients.new)}
-              sx={{ mt: 2 }}
-            >
-              Añadir Nuevo Cliente
-            </Button>
-          </Grid>
-          {selectedClient && (
-            <>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Teléfono del Cliente"
-                  value={selectedClient.phone || ''}
-                  InputProps={{ readOnly: true }}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Email del Cliente"
-                  value={selectedClient.email || ''}
-                  InputProps={{ readOnly: true }}
-                  fullWidth
-                />
-              </Grid>
-            </>
           )}
+        />
+
+        {/* Sale Details */}
+        <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={12} md={6}>
             <TextField
               label="Número de Venta"
-              value={saleNumber}
-              InputProps={{ readOnly: true }}
+              {...register('saleNumber', { required: 'El número de venta es requerido' })}
+              error={Boolean(errors.saleNumber)}
+              helperText={errors.saleNumber?.message}
               fullWidth
+              InputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
               label="Fecha de Venta"
               type="date"
-              {...register('saleDate')}
-              fullWidth
+              {...register('saleDate', { required: 'La fecha de venta es requerida' })}
               InputLabelProps={{ shrink: true }}
+              error={Boolean(errors.saleDate)}
+              helperText={errors.saleDate?.message}
+              fullWidth
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
               select
               label="Tipo de Venta"
-              {...register('saleType')}
+              {...register('saleType', { required: 'El tipo de venta es requerido' })}
+              error={Boolean(errors.saleType)}
+              helperText={errors.saleType?.message}
               fullWidth
-              defaultValue={defaultValues.saleType}
             >
               <MenuItem value="Contado">Contado</MenuItem>
               <MenuItem value="Crédito">Crédito</MenuItem>
@@ -208,25 +210,12 @@ export default function SaleForm({ isEdit, currentSale }) {
                   onChange={handleNationalChange}
                 />
               }
-              label="Venta Nacional"
+              label="Nacional"
             />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Moneda"
-              value={currency}
-              InputProps={{ readOnly: true }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField label="Ubicación" {...register('location')} fullWidth />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField label="Comentarios" {...register('comments')} fullWidth multiline rows={3} />
           </Grid>
         </Grid>
 
+        {/* Products */}
         <Typography variant="h6" sx={{ mt: 3 }}>
           Productos
         </Typography>
@@ -296,6 +285,26 @@ export default function SaleForm({ isEdit, currentSale }) {
         <Button variant="outlined" sx={{ mt: 2 }} onClick={addItem}>
           Añadir Producto
         </Button>
+
+        {/* Additional Details */}
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Ubicación"
+              {...register('location')}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Comentarios"
+              {...register('comments')}
+              fullWidth
+              multiline
+              rows={3}
+            />
+          </Grid>
+        </Grid>
 
         <Box sx={{ mt: 3, textAlign: 'right' }}>
           <LoadingButton type="submit" variant="contained">

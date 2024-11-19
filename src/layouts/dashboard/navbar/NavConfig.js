@@ -75,6 +75,11 @@ const navConfig = (role) => {
           path: PATH_DASHBOARD.products.list,
           icon: <Iconify icon="eva:cube-fill" />,
         },
+        {
+          title: 'Pedidos',
+          path: PATH_DASHBOARD.orders.list,
+          icon: <Iconify icon="eva:file-text-fill" />,
+        },
       ],
     },
 
