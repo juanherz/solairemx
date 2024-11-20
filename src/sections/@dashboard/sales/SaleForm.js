@@ -35,6 +35,7 @@ export default function SaleForm({ isEdit, currentSale }) {
   const [selectedClient, setSelectedClient] = useState(currentSale?.client || null);
   const [products, setProducts] = useState([]);
   const [orderData, setOrderData] = useState(null);
+  const [isFulfillOrder, setIsFulfillOrder] = useState(false);
 
   const defaultValues = {
     saleNumber: saleNumber,
@@ -62,6 +63,7 @@ export default function SaleForm({ isEdit, currentSale }) {
         setProducts(fetchedProducts);
 
         if (query.orderId) {
+          setIsFulfillOrder(true); // We are fulfilling an order
           const orderResponse = await axios.get(`/api/orders/${query.orderId}`);
           const order = orderResponse.data;
 
@@ -222,20 +224,31 @@ export default function SaleForm({ isEdit, currentSale }) {
         {items.map((item, index) => (
           <Grid container spacing={2} key={index} sx={{ mt: 1 }}>
             <Grid item xs={12} md={5}>
-              <Autocomplete
-                options={products}
-                getOptionLabel={(option) => option.name}
-                value={item.product}
-                onChange={(event, newValue) => {
-                  const newItems = [...items];
-                  newItems[index].product = newValue;
-                  newItems[index].description = newValue ? newValue.name : '';
-                  setItems(newItems);
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Producto" placeholder="Selecciona un producto" fullWidth />
-                )}
-              />
+              {isFulfillOrder ? (
+                // If fulfilling an order, display product name as read-only
+                <TextField
+                  label="Producto"
+                  value={item.product?.name || item.description || ''}
+                  InputProps={{ readOnly: true }}
+                  fullWidth
+                />
+              ) : (
+                // Otherwise, allow product selection via Autocomplete
+                <Autocomplete
+                  options={products}
+                  getOptionLabel={(option) => option.name}
+                  value={item.product}
+                  onChange={(event, newValue) => {
+                    const newItems = [...items];
+                    newItems[index].product = newValue;
+                    newItems[index].description = newValue ? newValue.name : '';
+                    setItems(newItems);
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Producto" placeholder="Selecciona un producto" fullWidth />
+                  )}
+                />
+              )}
             </Grid>
             <Grid item xs={12} md={2}>
               <TextField
@@ -266,25 +279,30 @@ export default function SaleForm({ isEdit, currentSale }) {
             <Grid item xs={12} md={2}>
               <TextField
                 label="Total"
-                value={item.quantity * item.unitPrice}
+                value={(item.quantity * item.unitPrice).toFixed(2)}
                 InputProps={{ readOnly: true }}
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={1}>
-              <IconButton
-                onClick={() => removeItem(index)}
-                disabled={items.length <= 1}
-              >
-                <Iconify icon="eva:trash-2-outline" />
-              </IconButton>
-            </Grid>
+            {!isFulfillOrder && (
+              <Grid item xs={12} md={1}>
+                <IconButton
+                  onClick={() => removeItem(index)}
+                  disabled={items.length <= 1}
+                >
+                  <Iconify icon="eva:trash-2-outline" />
+                </IconButton>
+              </Grid>
+            )}
           </Grid>
         ))}
 
-        <Button variant="outlined" sx={{ mt: 2 }} onClick={addItem}>
-          Añadir Producto
-        </Button>
+        {/* Show "Añadir Producto" button only if not fulfilling an order */}
+        {!isFulfillOrder && (
+          <Button variant="outlined" sx={{ mt: 2 }} onClick={addItem}>
+            Añadir Producto
+          </Button>
+        )}
 
         {/* Additional Details */}
         <Grid container spacing={2} sx={{ mt: 2 }}>

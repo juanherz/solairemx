@@ -87,7 +87,6 @@ export default function OrderDetails() {
 
         <Card sx={{ p: 3 }}>
           <Typography variant="h6">Información del Pedido</Typography>
-
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} md={6}>
               <Typography>
@@ -141,6 +140,11 @@ export default function OrderDetails() {
               <Typography>
                 <strong>Ubicación:</strong> {order.location}
               </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+            <Typography>
+                <strong>Nivel de Cumplimiento:</strong> {order.fulfillmentStatus}
+            </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography>

@@ -2,11 +2,12 @@
 
 import PropTypes from 'prop-types';
 import { TableRow, TableCell, Typography, Button } from '@mui/material';
-import { format } from 'date-fns';
+import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
+import { format } from 'date-fns';
 
 OrderTableRow.propTypes = {
-  row: PropTypes.object,
+  row: PropTypes.object.isRequired,
   onEditRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   onViewRow: PropTypes.func,
@@ -20,6 +21,7 @@ export default function OrderTableRow({ row, onEditRow, onDeleteRow, onViewRow }
     negotiatedPrice,
     currency,
     status,
+    fulfillmentStatus,
   } = row;
 
   // Generate a comma-separated list of product names
@@ -27,8 +29,33 @@ export default function OrderTableRow({ row, onEditRow, onDeleteRow, onViewRow }
     .map((item) => item.description || item.product?.name || 'N/A')
     .join(', ');
 
-  // Calculate total quantity
-  const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
+  // Determine color for status
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Pendiente':
+        return 'warning';
+      case 'Completado':
+        return 'success';
+      case 'Descartado':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
+  // Determine color for fulfillmentStatus
+  const getFulfillmentStatusColor = (status) => {
+    switch (status) {
+      case 'Completo':
+        return 'success';
+      case 'Parcial':
+        return 'warning';
+      case 'No Cumplido':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
 
   return (
     <TableRow hover>
@@ -38,15 +65,23 @@ export default function OrderTableRow({ row, onEditRow, onDeleteRow, onViewRow }
 
       <TableCell align="left">{productNames}</TableCell>
 
-      <TableCell align="right">{totalQuantity}</TableCell>
-
       <TableCell align="right">
-        {negotiatedPrice.toFixed(2)} {currency}
+        {negotiatedPrice ? negotiatedPrice.toFixed(2) : '0.00'} {currency}
       </TableCell>
 
       <TableCell align="left">{currency}</TableCell>
 
-      <TableCell align="left">{status}</TableCell>
+      <TableCell align="left">
+        <Label color={getStatusColor(status)} sx={{ textTransform: 'capitalize' }}>
+          {status}
+        </Label>
+      </TableCell>
+
+      <TableCell align="left">
+        <Label color={getFulfillmentStatusColor(fulfillmentStatus)} sx={{ textTransform: 'capitalize' }}>
+          {fulfillmentStatus || 'No Cumplido'}
+        </Label>
+      </TableCell>
 
       <TableCell align="right">
         <Button
@@ -57,14 +92,16 @@ export default function OrderTableRow({ row, onEditRow, onDeleteRow, onViewRow }
         >
           Ver
         </Button>
-        <Button
-          size="small"
-          color="inherit"
-          onClick={onEditRow}
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Editar
-        </Button>
+        {status !== 'Completado' && (
+          <Button
+            size="small"
+            color="inherit"
+            onClick={onEditRow}
+            startIcon={<Iconify icon="eva:edit-fill" />}
+          >
+            Editar
+          </Button>
+        )}
         <Button
           size="small"
           color="error"

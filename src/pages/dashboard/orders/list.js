@@ -10,6 +10,10 @@ import {
   Container,
   TableContainer,
   TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import useSettings from '../../../hooks/useSettings';
@@ -30,6 +34,7 @@ const TABLE_HEAD = [
   { id: 'negotiatedPrice', label: 'Precio Total', align: 'right' },
   { id: 'currency', label: 'Moneda', align: 'left' },
   { id: 'status', label: 'Estado', align: 'left' },
+  { id: 'fulfillmentStatus', label: 'Nivel de Cumplimiento', align: 'left' },
   { id: '' },
 ];
 
@@ -60,6 +65,8 @@ export default function OrdersList() {
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,18 +89,33 @@ export default function OrdersList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
+  const handleDeleteRow = (id) => {
+    setSelectedOrderId(id);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`/api/orders/${id}`);
-      const updatedData = tableData.filter((row) => row._id !== id);
+      await axios.delete(`/api/orders/${selectedOrderId}`);
+      const updatedData = tableData.filter((row) => row._id !== selectedOrderId);
       setTableData(updatedData);
+      setOpenConfirmDialog(false);
+      setSelectedOrderId(null);
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Error al eliminar el pedido', { variant: 'error' });
     }
   };
 
-  const handleEditRow = (id) => {
-    push(`${PATH_DASHBOARD.orders.root}/${id}/edit`);
+  const handleCancelDelete = () => {
+    setOpenConfirmDialog(false);
+    setSelectedOrderId(null);
+  };
+
+  const handleEditRow = (id, status) => {
+    if (status !== 'Completado') {
+      push(`${PATH_DASHBOARD.orders.root}/${id}/edit`);
+    }
   };
 
   const handleViewRow = (id) => {
@@ -151,7 +173,7 @@ export default function OrdersList() {
                       <OrderTableRow
                         key={row._id}
                         row={row}
-                        onEditRow={() => handleEditRow(row._id)}
+                        onEditRow={() => handleEditRow(row._id, row.status)}
                         onDeleteRow={() => handleDeleteRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                       />
@@ -174,6 +196,20 @@ export default function OrdersList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />
+
+          {/* Confirmation Dialog */}
+          <Dialog open={openConfirmDialog} onClose={handleCancelDelete}>
+            <DialogTitle>Confirmar eliminación</DialogTitle>
+            <DialogContent>
+              ¿Estás seguro de que deseas eliminar este pedido?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete}>Cancelar</Button>
+              <Button onClick={handleConfirmDelete} color="error">
+                Eliminar
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Card>
       </Container>
     </Page>
@@ -199,8 +235,8 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus }) {
         .join(' ');
 
       return (
-        clientName.indexOf(filterName.toLowerCase()) !== -1 ||
-        productNames.indexOf(filterName.toLowerCase()) !== -1
+        clientName.includes(filterName.toLowerCase()) ||
+        productNames.includes(filterName.toLowerCase())
       );
     });
   }
