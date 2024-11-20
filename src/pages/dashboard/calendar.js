@@ -56,7 +56,7 @@ export default function Calendar() {
 
   const [date, setDate] = useState(new Date());
 
-  const [view, setView] = useState(isDesktop ? 'timeGridWeek' : 'timeGridWeek');
+  const [view, setView] = useState(isDesktop ? 'timeGridWeek' : 'timeGridDay');
 
   const selectedEvent = useSelector(selectedEventSelector);
 
@@ -72,7 +72,7 @@ export default function Calendar() {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
-      const newView = isDesktop ? 'timeGridWeek' : 'timeGridWeek';
+      const newView = isDesktop ? 'timeGridWeek' : 'timeGridDay';
       calendarApi.changeView(newView);
       setView(newView);
     }
