@@ -1,3 +1,5 @@
+// src/components/animate/DialogAnimate.js
+
 import PropTypes from 'prop-types';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui

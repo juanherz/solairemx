@@ -1,3 +1,5 @@
+// src/components/HeaderBreadcrumbs.js
+
 import PropTypes from 'prop-types';
 import isString from 'lodash/isString';
 // @mui

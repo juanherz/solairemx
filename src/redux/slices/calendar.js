@@ -1,10 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
-// utils
-import axios from '../../utils/axios';
-//
-import { dispatch } from '../store';
+// src/redux/slices/calendar.js
 
-// ----------------------------------------------------------------------
+import { createSlice } from '@reduxjs/toolkit';
+import axios from '../../utils/axios';
+import { dispatch } from '../store';
 
 const initialState = {
   isLoading: false,
@@ -33,48 +31,40 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
-      state.events = action.payload;
+      state.events = action.payload.map((event) => ({ ...event, id: event._id }));
     },
 
     // CREATE EVENT
     createEventSuccess(state, action) {
       const newEvent = action.payload;
       state.isLoading = false;
-      state.events = [...state.events, newEvent];
+      state.events = [...state.events, { ...newEvent, id: newEvent._id }];
     },
 
     // UPDATE EVENT
     updateEventSuccess(state, action) {
-      const event = action.payload;
-      const updateEvent = state.events.map((_event) => {
-        if (_event.id === event.id) {
-          return event;
-        }
-        return _event;
-      });
-
+      const updatedEvent = action.payload;
       state.isLoading = false;
-      state.events = updateEvent;
+      state.events = state.events.map((event) =>
+        event.id === updatedEvent._id ? { ...updatedEvent, id: updatedEvent._id } : event
+      );
     },
 
     // DELETE EVENT
     deleteEventSuccess(state, action) {
       const { eventId } = action.payload;
-      const deleteEvent = state.events.filter((event) => event.id !== eventId);
-      state.events = deleteEvent;
+      state.events = state.events.filter((event) => event.id !== eventId);
     },
 
     // SELECT EVENT
     selectEvent(state, action) {
       const eventId = action.payload;
-      state.isOpenModal = true;
       state.selectedEventId = eventId;
     },
 
     // SELECT RANGE
     selectRange(state, action) {
       const { start, end } = action.payload;
-      state.isOpenModal = true;
       state.selectedRange = { start, end };
     },
 
@@ -89,6 +79,11 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
+
+    // UNSELECT EVENT
+    unselectEvent(state) {
+      state.selectedEventId = null;
+    },
   },
 });
 
@@ -96,10 +91,9 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent } = slice.actions;
+export const { openModal, closeModal, selectEvent, unselectEvent } = slice.actions;
 
-// ----------------------------------------------------------------------
-
+// Thunks
 export function getEvents() {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -111,8 +105,6 @@ export function getEvents() {
     }
   };
 }
-
-// ----------------------------------------------------------------------
 
 export function createEvent(newEvent) {
   return async () => {
@@ -126,15 +118,13 @@ export function createEvent(newEvent) {
   };
 }
 
-// ----------------------------------------------------------------------
-
-export function updateEvent(eventId, updateEvent) {
+export function updateEvent(eventId, updateEventData) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/calendar/events/update', {
         eventId,
-        updateEvent,
+        updateEvent: updateEventData,
       });
       dispatch(slice.actions.updateEventSuccess(response.data.event));
     } catch (error) {
@@ -142,8 +132,6 @@ export function updateEvent(eventId, updateEvent) {
     }
   };
 }
-
-// ----------------------------------------------------------------------
 
 export function deleteEvent(eventId) {
   return async () => {
@@ -157,15 +145,8 @@ export function deleteEvent(eventId) {
   };
 }
 
-// ----------------------------------------------------------------------
-
 export function selectRange(start, end) {
-  return async () => {
-    dispatch(
-      slice.actions.selectRange({
-        start: start.getTime(),
-        end: end.getTime(),
-      })
-    );
+  return () => {
+    dispatch(slice.actions.selectRange({ start, end }));
   };
 }
