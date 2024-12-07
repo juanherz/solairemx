@@ -85,6 +85,8 @@ export default function CalendarEventDialog({ event, onCancel, onEdit }) {
           ) : (
             <Typography variant="body2">No hay usuarios asignados</Typography>
           )}
+          <Typography variant="subtitle2">Categoría</Typography>
+          <Typography variant="body2">{event.category || 'Sin categoría'}</Typography>
         </Stack>
       </DialogContent>
       <DialogActions>

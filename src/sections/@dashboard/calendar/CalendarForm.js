@@ -16,6 +16,7 @@ import {
   IconButton,
   DialogActions,
   Autocomplete,
+  MenuItem,
 } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { useDispatch } from '../../../redux/store';
@@ -36,6 +37,9 @@ const COLOR_OPTIONS = [
   '#7A0C2E',
 ];
 
+// Hard-coded categories
+const CATEGORY_OPTIONS = ['Trabajo', 'Personal', 'Urgente', 'Otro'];
+
 CalendarForm.propTypes = {
   event: PropTypes.object,
   range: PropTypes.object,
@@ -55,6 +59,7 @@ export default function CalendarForm({ event, range, onCancel }) {
     start: Yup.date().required('La fecha de inicio es requerida'),
     end: Yup.date().required('La fecha de fin es requerida'),
     users: Yup.array(),
+    category: Yup.string().oneOf(CATEGORY_OPTIONS),
   });
 
   const [userOptions, setUserOptions] = useState([]);
@@ -111,6 +116,7 @@ export default function CalendarForm({ event, range, onCancel }) {
       start: range ? new Date(range.start) : new Date(),
       end: range ? new Date(range.end) : new Date(),
       users: [],
+      category: 'Trabajo', 
     };
 
     if (event) {
@@ -129,6 +135,7 @@ export default function CalendarForm({ event, range, onCancel }) {
         ..._event,
         ...event,
         users: formattedUsers,
+        category: event.category || 'Trabajo',
       };
     }
 
@@ -145,6 +152,7 @@ export default function CalendarForm({ event, range, onCancel }) {
         start: data.start,
         end: data.end,
         users: data.users.map((user) => user._id),
+        category: data.category,
       };
       if (event.id || event._id) {
         dispatch(updateEvent(event.id || event._id, newEvent));
@@ -220,7 +228,7 @@ export default function CalendarForm({ event, range, onCancel }) {
             />
           )}
         />
-
+        {/* Users Field */}
         <Controller
           name="users"
           control={control}
@@ -236,6 +244,25 @@ export default function CalendarForm({ event, range, onCancel }) {
               }}
               renderInput={(params) => <TextField {...params} label="Usuarios asignados" />}
             />
+          )}
+        />
+        {/* Category Field */}
+        <Controller
+          name="category"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              select
+              label="Categoría"
+              fullWidth
+            >
+              {CATEGORY_OPTIONS.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
           )}
         />
 
