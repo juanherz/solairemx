@@ -59,7 +59,7 @@ export default function OrderTableRow({ row, onEditRow, onDeleteRow, onViewRow }
 
   return (
     <TableRow hover>
-      <TableCell align="left">{format(new Date(deliveryDate), 'dd/MM/yyyy')}</TableCell>
+      <TableCell align="left">{new Date(deliveryDate).toISOString().split('T')[0]}</TableCell>
 
       <TableCell align="left">{client.name}</TableCell>
 

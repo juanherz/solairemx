@@ -177,7 +177,7 @@ export default function ClientSummary() {
                 {sortedSales.map((sale) => (
                   <TableRow key={sale._id}>
                     <TableCell>{sale.saleNumber}</TableCell>
-                    <TableCell>{new Date(sale.saleDate).toLocaleDateString()}</TableCell>
+                    <TableCell>{new Date(sale.saleDate).toISOString().split('T')[0]}</TableCell>
                     <TableCell>{sale.totalAmount}</TableCell>
                     <TableCell>{sale.amountPaid}</TableCell>
                     <TableCell>{sale.amountOwed}</TableCell>

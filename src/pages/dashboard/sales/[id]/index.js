@@ -118,7 +118,7 @@ export default function SaleDetails() {
           <Typography>Cliente: {sale.client?.name}</Typography>
           <Typography>Teléfono: {sale.client?.phone}</Typography>
           <Typography>Email: {sale.client?.email}</Typography>
-          <Typography>Fecha de Venta: {new Date(sale.saleDate).toLocaleDateString()}</Typography>
+          <Typography>Fecha de Venta: {new Date(sale.saleDate).toISOString().split('T')[0]}</Typography> 
           <Typography>Tipo de Venta: {sale.saleType}</Typography>
           <Typography>Moneda: {sale.currency}</Typography>
           <Typography>Ubicación: {sale.location}</Typography>
@@ -138,7 +138,7 @@ export default function SaleDetails() {
           {sale.payments.map((payment) => (
             <Box key={payment._id} display="flex" alignItems="center" sx={{ mb: 1 }}>
               <Typography>
-                Fecha: {new Date(payment.date).toLocaleDateString()} - Monto: {payment.amount} - Comentarios: {payment.comments}
+                Fecha: {new Date(payment.date).toISOString().split('T')[0]} - Monto: {payment.amount} - Comentarios: {payment.comments}
               </Typography>
               <Button
                 aria-label="delete"

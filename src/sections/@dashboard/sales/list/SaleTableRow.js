@@ -23,7 +23,7 @@ export default function SaleTableRow({ row, onViewRow }) {
 
       <TableCell align="left">{client?.name || 'Sin Cliente'}</TableCell>
 
-      <TableCell align="left">{new Date(saleDate).toLocaleDateString()}</TableCell>
+      <TableCell align="left">{new Date(saleDate).toISOString().split('T')[0]}</TableCell>
 
       <TableCell align="left">
         {totalAmount} {currency}

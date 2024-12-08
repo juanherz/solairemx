@@ -96,7 +96,7 @@ export default function OrderDetails() {
             <Grid item xs={12} md={6}>
               <Typography>
                 <strong>Fecha de Entrega:</strong>{' '}
-                {format(new Date(order.deliveryDate), 'dd/MM/yyyy')}
+                {new Date(order.deliveryDate).toISOString().split('T')[0]}
               </Typography>
             </Grid>
           </Grid>
